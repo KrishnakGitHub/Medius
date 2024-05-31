@@ -60,7 +60,7 @@ def upload_file(request):
             
             # Send summary report via email
             output = BytesIO()
-            summary.to_csv(output, index=False)
+            summary.to_csv(output, index=False, encoding='utf-8')
             output.seek(0)
             try:
                 send_email_with_attachment(
