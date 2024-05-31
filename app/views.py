@@ -12,7 +12,10 @@ def upload_file(request):
         if form.is_valid():
             file = request.FILES['file']
             if file.name.endswith('.xlsx'):
-                df = pd.read_excel(file)
+                try:
+                    df = pd.read_excel(file)
+                except Exception as e:
+                    return render(request, 'upload.html', {'form': form, 'error': str(e)})
             elif file.name.endswith('.csv'):
                 df = pd.read_csv(file)
             else:
