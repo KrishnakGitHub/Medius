@@ -1,5 +1,5 @@
 import pandas as pd
-from io import BytesIO
+from io import StringIO
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.shortcuts import render
@@ -59,7 +59,7 @@ def upload_file(request):
                 return render(request, 'upload.html', {'form': form, 'error': 'Invalid file format. Please upload an Excel file or a CSV file.'})
             
             # Send summary report via email
-            output = BytesIO()
+            output = StringIO()
             summary.to_csv(output, index=False, encoding='utf-8')
             output.seek(0)
             try:
