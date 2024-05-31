@@ -28,3 +28,18 @@ This Django project allows users to upload Excel/CSV files, generates a summary 
 ```bash
 git clone https://github.com/yourusername/Medius.git
 cd Medius
+
+- pip install -r requirements.txt
+- Create a .env file in the root directory and add
+EMAIL_HOST=smtp.your-email-provider.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@example.com
+EMAIL_HOST_PASSWORD=your-email-password
+DEFAULT_FROM_EMAIL=your-email@example.com
+DEFAULT_TO_EMAIL=tech@themedius.ai,hr@themedius.ai
+
+- python manage.py migrate
+- python manage.py runserver
+
+
