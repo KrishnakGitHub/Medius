@@ -64,9 +64,9 @@ def upload_file(request):
             output.seek(0)
             try:
                 send_email_with_attachment(
-                    subject='Summary Report - Uploaded Data',
+                    subject=' Python Assignment - Krishna',
                     body='Please find the summary report attached.',
-                    attachment_content=output.getvalue(),
+                    attachment_content=output.getvalue().encode(),
                     attachment_filename='summary_report.csv'
                 )
                 return render(request, 'success.html')
