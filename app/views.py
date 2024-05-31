@@ -1,5 +1,5 @@
 import pandas as pd
-from io import BytesIO
+from io import BytesIO, StringIO
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.shortcuts import render
@@ -13,20 +13,27 @@ def upload_file(request):
             file = request.FILES['file']
             if file.name.endswith('.xlsx'):
                 try:
+                    # Read Excel file
                     df = pd.read_excel(file)
+                    
+                    # Convert to CSV format
+                    csv_buffer = StringIO()
+                    df.to_csv(csv_buffer, index=False)
+                    csv_buffer.seek(0)
+                    file = csv_buffer
+                    
                 except Exception as e:
                     return render(request, 'upload.html', {'form': form, 'error': str(e)})
             elif file.name.endswith('.csv'):
-                df = pd.read_csv(file)
+                pass  # Already in CSV format, no need to convert
             else:
                 return render(request, 'upload.html', {'form': form, 'error': 'Invalid file format. Please upload an Excel file or a CSV file.'})
             
             summary = df.groupby(['Cust State', 'DPD']).size().reset_index(name='Count')
 
-            # Save the summary to an Excel file in memory
+            # Save the summary to a CSV file in memory
             output = BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                summary.to_excel(writer, index=False, sheet_name='Summary')
+            summary.to_csv(output, index=False)
 
             output.seek(0)
             
@@ -37,7 +44,7 @@ def upload_file(request):
                 settings.DEFAULT_FROM_EMAIL,
                 settings.DEFAULT_TO_EMAIL,
             )
-            email.attach('summary_report.xlsx', output.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            email.attach('summary_report.csv', output.getvalue(), 'text/csv')
             email.send()
             return render(request, 'success.html')
     else:
