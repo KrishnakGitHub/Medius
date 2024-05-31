@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Upload File</h1>
+<form method="post" enctype="multipart/form-data" class="form-inline">
+    {% csrf_token %}
+    <div class="form-group mb-2">
+        <label for="{{ form.file.id_for_label }}" class="sr-only">{{ form.file.label }}</label>
+        {{ form.file }}
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Upload</button>
+</form>
+{% endblock %}
